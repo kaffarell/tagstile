@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^6.7.2",
+    "mongose": "^0.0.2-security"
+  },
+  "name": "tagstile",
+  "description": "",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kaffarell/tagstile.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kaffarell/tagstile/issues"
+  },
+  "homepage": "https://github.com/kaffarell/tagstile#readme"
+}
