@@ -4,14 +4,10 @@ var Schema = mongoose.Schema;
  
  
  const wash= new Schema ({ 
-     owner: String, 
-     location: String,
-     mainColor: String,
-     secondaryColor: String,
-     pattern: String,
-     material: String, 
-     washInfo: String,
-     washable: Boolean,
+    labelId: String,
+    date: Date,
+    location: String, 
+    washingMachine: String,
  });
  
  
@@ -20,7 +16,7 @@ var Schema = mongoose.Schema;
  module.exports = Wash; 
  
  
- label.path('_id'); 
+ wash.path('_id'); 
 
  
  

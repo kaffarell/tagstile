@@ -46,19 +46,28 @@ router.get('/id/:id', async (req, res) => {
 
 
 router.post('/:id', async (req, res) =>{
-    let label=new Label({
-        _id: req.params.id,
-        owner: req.body.owner, 
-        location: req.body.location,
-        mainColor: req.body.mainColor, 
-        secondaryColor: req.body.secondaryColor,
-        pattern: req.body.pattern,
-        material: req.body.material,
-        washInfo: req.body.washInfo,
-        washable: req.body.washable,
-    })
-    label=await label.save(); 
-    res.location("/api/v1/label/" + label._id).status(201).send();
+
+    let idLabel = req.params.id; 
+    let label1 = await Label.findOne({_id: idLabel}); 
+    if(label1){
+        res.status(500).json(label1);  
+        console.log("label already exists"); 
+        return; 
+    } else {
+        let label=new Label({
+            _id: req.params.id,
+            owner: req.body.owner, 
+            location: req.body.location,
+            mainColor: req.body.mainColor, 
+            secondaryColor: req.body.secondaryColor,
+            pattern: req.body.pattern,
+            material: req.body.material,
+            washInfo: req.body.washInfo,
+            washable: req.body.washable,
+        })
+        label=await label.save(); 
+        res.location("/api/v1/label/" + label._id).status(201).send();
+    }
 });
 
 
