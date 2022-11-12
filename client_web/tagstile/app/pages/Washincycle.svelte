@@ -1,8 +1,10 @@
 <script lang="ts">
-    import { Http, HttpResponse, Template } from "@nativescript/core";
+    import { Http, HttpResponse } from "@nativescript/core";
     import { navigate } from "svelte-native";
     import { readNfcTag } from "~/managers/nfcManager";
     import Home from "./Home.svelte";
+    import { prompt } from '@nativescript/core/ui/dialogs'
+
 
 
     let array: any[] = [];
@@ -14,6 +16,11 @@
     let material: string;
     let mainColor: string;
     let compatibilityMessage = 'Compare more than two tags...';
+    let selectedWashingMachine: number;
+
+    prompt('Enter washingmachine number/id: ').then((res) => {
+        selectedWashingMachine = parseInt(res.text);
+    });
 
     readNfcTag((content) => {
         // first check if new 
@@ -29,11 +36,9 @@
         }).then(
             (response: HttpResponse) => {
                 if (response.statusCode === 200) {
-                    console.log(response.content?.toJSON());
                     uniqueId = response.content?.toJSON()["_id"];
                     washable = response.content?.toJSON().washable;
                     owner = response.content?.toJSON().owner;
-                    console.log('setting owner on display to ' + response.content?.toJSON().owner);
                     washInfo = response.content?.toJSON().washInfo;
                     material = response.content?.toJSON().material;
                     mainColor = response.content?.toJSON().mainColor;
@@ -50,44 +55,36 @@
                             isWashable = false;
                         } 
                     }
-                    if(isWashable === true) {
-                        console.log('washable with previous textile');
-                        // add to storage
-                        array.push({
-                            uniqueId: uniqueId,
-                            owner: owner,
-                            temperature: washInfo,
-                            fabric: material,
-                            color: mainColor
-                        });
-                        // Hack to trigger svelte rerender
-                        array = array;
-                        compatibilityMessage = 'Washable with previous textiles';
+                    if(isWashable === true ) {
+                        if(!array.some((e) => e.uniqueId === currentObject.uniqueId)) {
+                            console.log('washable with previous textile');
+                            // add to storage
+                            array.push({
+                                uniqueId: uniqueId,
+                                owner: owner,
+                                temperature: washInfo,
+                                fabric: material,
+                                color: mainColor
+                            });
+                            // Hack to trigger svelte rerender
+                            array = array;
+                            compatibilityMessage = 'Washable with previous textiles';
+                        }else{
+                            compatibilityMessage = 'Textile already scanned';
+                        }
                     }else{
                         console.log('not washable with previouso textile');
                         compatibilityMessage = 'Current textile NOT washable with previous ones';
                     }
                 } else {
                     console.log('failed');
-                    // clear ui
-                    uniqueId = "";
-                    washable = "";
-                    owner = "";
-                    washInfo = "";
-                    material = "";
-                    mainColor = "";
+                    resetInfos();
                 }
             },
             (e) => {
                 console.log(e);
                 console.log('failed');
-                // clear ui
-                uniqueId = "";
-                washable = "";
-                owner = "";
-                washInfo = "";
-                material = "";
-                mainColor = "";
+                resetInfos();
             }
         );
     });
@@ -97,16 +94,64 @@
             page: Home
         });
     }
+
+    function startWash() {
+        console.log('cool');
+        console.log(array);
+        for(let i = 0; i < array.length; i++) {
+            Http.request({
+                url: "https://tagstile-app.herokuapp.com/api/v1/wash/",
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                content: JSON.stringify({
+                    labelId: array[i].uniqueId,
+                    location: "WeWashEverything Inc.",
+                    washingMachine: selectedWashingMachine
+                }),
+            }).then(
+                (response: HttpResponse) => {
+                    if (response.statusCode === 201) {
+                        console.log('OK');
+                    }
+                },
+                (e) => {
+                    console.log(e);
+                    console.log('failed');
+                }
+        )};
+
+        resetInfos();
+        reset();
+    }
+
+    function reset() {
+        resetInfos();
+        array = [];
+    }
+
+    function resetInfos() {
+        // clear ui
+        uniqueId = "";
+        washable = "";
+        owner = "";
+        washInfo = "";
+        material = "";
+        mainColor = "";
+    }
+
     // check if we can add to storage
     function washableTogether(objA: any, objB: any) {
-        if(objA.fabric !== objB.fabric)
-            return false;
+        if(objA.fabric !== "" && objB.fabric !== "")
+            if(objA.fabric !== objB.fabric)
+                return false;
 
-        if(objA.temperature !== objB.temperature)
-            return false;
+        if(objA.temperature !== "" && objB.temperature !== "")
+            if(objA.temperature !== objB.temperature)
+                return false;
 
-        if(!colorMatches(objA.color, objB.color))
-            return false;
+        if(objA.color !== "" && objB.color !== "")
+            if(!colorMatches(objA.color, objB.color))
+                return false;
 
         return true;
     }
@@ -164,20 +209,17 @@
       </label>
     </stackLayout>
 
-    <button on:tap={returnToHome}>Return</button>
-    <label textWrap={true}>
+    <button on:tap={startWash}>Start washing</button>
+    <label class="compMessage">
         <formattedString>
-            <span text="{compatibilityMessage}" style="font-weight: bold" />
-            <!--<span text="{array.map(e => e.uniqueId + ', ' + e.owner).join('\n')}" style="font-weight: bold" />-->
+            <span text="{compatibilityMessage + '\n'}" style="font-weight: bold; font-size: 22" />
         </formattedString>
     </label>
-    <listView items="{array}" row="1" colSpan="2">
-       <template let:item>
-          {#each array as item}      
-             <label text="{item.uniqueId}. {item}" textWrap="true" />
-          {/each}
-       </template>
-    </listView>
+    <textView editable="false" class="mainMessage" text="{array.map(e => e.uniqueId + ', ' + e.owner).join('\n')}" style="font-weight: bold; font-size: 18" />
+    <flexBoxLayout>
+        <button on:tap={reset}>Reset</button>
+        <button on:tap={returnToHome}>Return</button>
+    </flexBoxLayout>
   </stackLayout>
 </page>
 
@@ -192,7 +234,17 @@
         margin-top: 1%;
         margin-left: 10%;
     }
-    listView {
-        height: 30%;
+
+    .mainMessage {
+        height: 15%;
+        text-align: center;
+    }
+    .compMessage {
+        text-align: center;
+    }
+
+    flexBoxLayout {
+        width: 100%;
+        justify-content: center;
     }
 </style>
