@@ -63,8 +63,7 @@
   }
 </script>
 
-<page>
-  <actionBar title="New Label" />
+<page actionBarHidden="{true}">
   <stackLayout height="100%">
     <label text="Owner:" />
     <textField bind:text={ownerInput} />
@@ -95,15 +94,24 @@
 </page>
 
 <style>
-  .bigInput {
-    height: 17%;
-  }
-  label {
-    font-size: 18;
-    margin-left: 10%;
-  }
-  button {
-    background-color: #54cfbb;
-    border-radius: 10vw;
-  }
+    .bigInput {
+        height: 17%;
+    }
+    label {
+        font-size: 18;
+        margin-left: 10%;
+        color: black;
+    }
+    button {
+        background-color: white;
+        border-radius: 10vw;
+        color: black;
+    }
+    textField {
+        color: black;
+    }
+    page {
+        background: linear-gradient(white, #b9bbbb);
+        color: black;
+    }
 </style>

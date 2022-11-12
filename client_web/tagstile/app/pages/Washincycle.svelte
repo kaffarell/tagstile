@@ -6,7 +6,6 @@
     import { prompt } from '@nativescript/core/ui/dialogs'
 
 
-
     let array: any[] = [];
 
     let uniqueId: string;
@@ -167,38 +166,37 @@
     }
 </script>
 
-<page>
-  <actionBar title="Washing cycle" />
+<page actionBarHidden="{true}">
   <stackLayout>
-    <stackLayout>
+    <stackLayout class="infoGroup">
       <label textWrap={true}>
         <formattedString>
           <span text="UniqueId:" />
-          <span text="{uniqueId}" style="font-weight: bold" />
+          <span text="{uniqueId}" style="font-weight: bold; font-size: 22;" />
         </formattedString>
       </label>
       <label textWrap={true}>
         <formattedString>
           <span text="Washable: " />
-          <span text="{washable}" style="font-weight: bold" />
+          <span text="{washable}" style="font-weight: bold; font-size: 22;" />
         </formattedString>
       </label>
       <label textWrap={true}>
         <formattedString>
           <span text="Owner: " />
-          <span text="{owner}" style="font-weight: bold" />
+          <span text="{owner}" style="font-weight: bold; font-size: 22;" />
         </formattedString>
       </label>
       <label textWrap={true}>
         <formattedString>
           <span text="Washing Info: " />
-          <span text="{washInfo}" style="font-weight: bold" />
+          <span text="{washInfo}" style="font-weight: bold; font-size: 22;" />
         </formattedString>
       </label>
       <label textWrap={true}>
         <formattedString>
           <span text="Material: " />
-          <span text="{material}" style="font-weight: bold" />
+          <span text="{material}" style="font-weight: bold; font-size: 22;" />
         </formattedString>
       </label>
       <label textWrap={true}>
@@ -209,7 +207,7 @@
       </label>
     </stackLayout>
 
-    <button on:tap={startWash}>Start washing</button>
+    <button class="fas" on:tap={startWash}>Start washing</button>
     <label class="compMessage">
         <formattedString>
             <span text="{compatibilityMessage + '\n'}" style="font-weight: bold; font-size: 22" />
@@ -217,17 +215,21 @@
     </label>
     <textView editable="false" class="mainMessage" text="{array.map(e => e.uniqueId + ', ' + e.owner).join('\n')}" style="font-weight: bold; font-size: 18" />
     <flexBoxLayout>
-        <button on:tap={reset}>Reset</button>
-        <button on:tap={returnToHome}>Return</button>
+        <button class="fas" on:tap={reset}>Reset</button>
+        <button class="fas" on:tap={returnToHome}>Return</button>
     </flexBoxLayout>
   </stackLayout>
 </page>
 
 <style>
     button {
-        background-color: #54CFBB;
-        border-radius: 10vw;
-        margin-top: 8%;
+        background-color: white;
+        color: black;
+        border-radius: 9vw;
+        margin-top: 2%;
+        box-shadow:0 0 40px rgba(0,0,0,0.2);
+        font-size: 18;
+        width: 90%;
     }
     label {
         font-size: 20;
@@ -240,11 +242,27 @@
         text-align: center;
     }
     .compMessage {
+        width: 100%;
         text-align: center;
     }
 
     flexBoxLayout {
         width: 100%;
         justify-content: center;
+    }
+    page {
+        background: linear-gradient(white, #b9bbbb);
+        color: black;
+    }
+    .infoGroup {
+        background-color: white;
+        color: black;
+        width: 90%;
+        height: 30%;
+        box-shadow:0 0 40px rgba(0,0,0,0.2);
+        border-radius: 9vw;
+        vertical-align: center;
+        margin-top: 3%;
+        margin-bottom: 3%;
     }
 </style>
