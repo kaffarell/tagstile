@@ -1,0 +1,127 @@
+*{
+
+    font-family: "Open Sans",sans-serif;
+    font-size: 20px;
+  
+  }
+  
+  body {
+    background-color: black; 
+   align-self: center;
+   align-items: center;
+  }
+
+.collapsible {
+    background-color: white;
+    color:#147c64;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    border-radius: 10px;
+    margin-top:10px; 
+    margin-bottom: 0px;
+    margin-left:0px; 
+    font-size: 25px;
+    font-style: initial;
+ 
+    
+  }
+  
+  .active, .collapsible:hover {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+  
+  .collapsible:after {
+    content: '\002B';
+    color: white;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+  
+  
+  
+  .content {
+    padding: 0 18px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    background-color: #f1f1f1;
+  }
+
+  button{
+    padding: 10px;
+    background-color: white;
+    box-shadow: 0px 20px 20px #aaaaaa18 ;
+    margin-left: 20px;
+  }
+
+  
+  table {
+    font-family: arial, sans-serif;
+    border: 3px;
+    width: 100%;
+    padding: 20px;
+  }
+  
+  td, th {
+   
+    text-align: left;
+    padding: 8px;
+  }
+  
+  div.sticky {
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+    background-color: #F7FBFF;
+    opacity: 1;
+  
+  }
+
+  ul {
+    margin:0; 
+    padding:0; 
+    padding-top: 20px;
+    padding-bottom: 15px;
+  }
+
+  ul.menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+    width: auto;
+  }
+  
+  li.menu {
+    float: left;
+    
+  }
+  
+  li.menu a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 30px; 
+  }
+  
+  li.menu a:hover {
+    background-color: #111;
+    font-size: 35px; 
+  }
+  li.menu a.active{
+    background-color: #111;
+    font-size: 35px; 
+    text-decoration: underline;
+  }
