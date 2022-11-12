@@ -3,6 +3,7 @@
   import { goBack } from "svelte-native";
   import { Toasty } from "nativescript-toasty";
   import { getUUID } from "@owen-it/nativescript-uuid";
+  import { writeNfcTag } from "~/managers/nfcManager";
 
   let ownerInput: string;
   let locationInput: string;
@@ -16,37 +17,49 @@
   function createLabel() {
     // make rest cal with all the variables
     let id: string = getUUID();
-    Http.request({
-      url: "https://tagstile-app.herokuapp.com/api/v1/label/" + id,
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      content: JSON.stringify({
-        owner: ownerInput,
-        location: locationInput,
-        mainColor: mainColorInput,
-        secondaryColor: secondaryColorInput,
-        pattern: patternInput,
-        material: materialInput,
-        washInfo: washingInfoInput,
-        washable: washableInput,
-      }),
-    }).then(
-      (response: HttpResponse) => {
-        const result = response.content?.toJSON();
-        console.log(`Http POST Result: ${result}`);
-        if (response.statusCode === 201) {
-          const toast = new Toasty({ text: "Success!" });
-          toast.show();
-        } else {
-          const toast = new Toasty({ text: "Failed!" });
-          toast.show();
-        }
-      },
-      (e) => {}
-    );
 
-    // then go back
-    goBack();
+    writeNfcTag(id).then(() => {
+        console.log('Successfully written');
+        Http.request({
+            url: "https://tagstile-app.herokuapp.com/api/v1/label/" + id,
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            content: JSON.stringify({
+                owner: ownerInput,
+                location: locationInput,
+                mainColor: mainColorInput,
+                secondaryColor: secondaryColorInput,
+                pattern: patternInput,
+                material: materialInput,
+                washInfo: washingInfoInput,
+                washable: washableInput,
+            }),
+        }).then(
+            (response: HttpResponse) => {
+                console.log('got request');
+                console.log(response.statusCode);
+                console.log(response);
+                if (response.statusCode === 201) {
+                    console.log('works');
+                    const toast = new Toasty({ text: "Success!" });
+                    toast.show();
+                    // then go back
+                    goBack();
+                } else {
+                    console.log('failed');
+                    const toast = new Toasty({ text: "Failed!" });
+                    toast.show();
+                }
+            },
+            (e) => {
+                console.log(e);
+                const toast = new Toasty({ text: "Failed!" });
+                toast.show();
+                console.log('failed');
+            }
+        );
+        console.log('after then');
+    });
   }
 </script>
 
