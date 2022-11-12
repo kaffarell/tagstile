@@ -4,7 +4,7 @@
     import { readNfcTag } from "~/managers/nfcManager";
     import Home from "./Home.svelte";
     import { prompt } from '@nativescript/core/ui/dialogs'
-
+    import yaml from 'js-yaml';
 
     let array: any[] = [];
 
@@ -16,7 +16,7 @@
     let mainColor: string;
     let secondaryColor: string;
     let pattern: string;
-    let compatibilityMessage = 'Compare more than two tags...';
+    let compatibilityMessage = 'Scan a tag to begin...';
     let selectedWashingMachine: number;
 
     prompt('Enter washingmachine number/id: ').then((res) => {
@@ -37,6 +37,7 @@
         }).then(
             (response: HttpResponse) => {
                 if (response.statusCode === 200) {
+                    console.log('works');
                     uniqueId = response.content?.toJSON()["_id"];
                     washable = response.content?.toJSON().washable ?? "";
                     owner = response.content?.toJSON().owner ?? "";
@@ -49,9 +50,10 @@
                         uniqueId: uniqueId,
                         owner: owner,
                         fabric: material,
-                        temperature: washInfo,
+                        temperature: washInfo ?? (yaml.load(washInfo)as any).temperature ?? "",
                         color: mainColor,
-                    }
+                    };
+                    console.log(currentObject);
                     let isWashable = true;
                     for(let i = 0; i < array.length; i++) {
                         if(!washableTogether(array[i], currentObject)) {
@@ -65,7 +67,7 @@
                             array.push({
                                 uniqueId: uniqueId,
                                 owner: owner,
-                                temperature: washInfo,
+                                temperature: washInfo ?? (yaml.load(washInfo)as any).temperature ?? "",
                                 fabric: material,
                                 color: mainColor
                             });
@@ -199,9 +201,9 @@
       <label textWrap={true}>
         <formattedString>
           <span text="Washing Info: " />
-          <span text="{washInfo}" style="font-weight: bold; font-size: 22;" />
         </formattedString>
       </label>
+      <textView editable="{false}" text="{washInfo}" style="font-weight: bold; font-size: 15; color: black;margin-left: 12%;"/>
       {/if}
       {#if material != ""}
       <label textWrap={true}>
@@ -262,7 +264,7 @@
         width: 90%;
     }
     label {
-        font-size: 20;
+        font-size: 18;
         margin-top: 1%;
         margin-left: 10%;
     }
@@ -283,6 +285,10 @@
     page {
         background: linear-gradient(white, #b9bbbb);
         color: black;
+    }
+    textView {
+        background-color: rgb(240, 240, 240);
+        border-radius: 9vw;
     }
     .infoGroup {
         background-color: white;

@@ -94,9 +94,9 @@
       <label textWrap={true}>
         <formattedString>
           <span text="Washing info:  " />
-          <span text="{washInfo}" style="font-weight: bold; font-size: 22;" />
         </formattedString>
       </label>
+      <textView editable="{false}" text="{washInfo}" style="font-weight: bold; font-size: 19; color: black;margin-left: 12%;"/>
       {/if}
       {#if material != ""}
       <label textWrap={true}>
@@ -154,6 +154,10 @@
         box-shadow:0 0 40px rgba(0,0,0,0.2);
         font-size: 18;
         width: 90%;
+    }
+    textView {
+        background-color: rgb(240, 240, 240);
+        border-radius: 9vw;
     }
     label {
         font-size: 20;

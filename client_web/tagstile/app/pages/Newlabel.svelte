@@ -64,29 +64,34 @@
 
 <page actionBarHidden="{true}">
   <stackLayout height="100%">
-    <label text="Owner:" />
-    <textField bind:text={ownerInput} />
+    <scrollView orientation="vertical">
+        <stackLayout>        
+            <label text="Owner:" />
+            <textField bind:text={ownerInput} />
 
-    <label text="Location:" />
-    <textField bind:text={locationInput} />
+            <label text="Location:" />
+            <textField bind:text={locationInput} />
 
-    <label text="Main color:" />
-    <textField bind:text={mainColorInput} />
+            <label text="Main color:" />
+            <textField bind:text={mainColorInput} />
 
-    <label text="Secondary color:" />
-    <textField bind:text={secondaryColorInput} />
+            <label text="Secondary color:" />
+            <textField bind:text={secondaryColorInput} />
 
-    <label text="Pattern:" />
-    <textField bind:text={patternInput} />
+            <label text="Pattern:" />
+            <textField bind:text={patternInput} />
 
-    <label text="Material:" />
-    <textField bind:text={materialInput} />
+            <label text="Material:" />
+            <textField bind:text={materialInput} />
 
-    <label text="Washing info (example: temperature=98):" />
-    <textField class="bigInput" bind:text={washingInfoInput} />
+            <label text="Washing info (example: temperature=98):" />
+            <textField class="bigInput" bind:text={washingInfoInput} />
 
-    <label text="Washable:" />
-    <switch bind:checked={washableInput} />
+            <label text="Washable:" />
+            <switch bind:checked={washableInput} />
+        </stackLayout>
+
+    </scrollView>
 
     <button on:tap={createLabel}>Create Label</button>
   </stackLayout>
@@ -94,10 +99,13 @@
 
 <style>
     .bigInput {
-        height: 17%;
+        height: 15%;
+    }
+    scrollView {
+        height: 85%
     }
     label {
-        font-size: 18;
+        font-size: 17;
         margin-left: 10%;
         color: black;
     }
@@ -108,6 +116,8 @@
     }
     textField {
         color: black;
+        font-size: 18;
+        margin-left: 5%;
     }
     page {
         background: linear-gradient(white, #b9bbbb);
