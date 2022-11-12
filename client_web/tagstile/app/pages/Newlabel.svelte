@@ -35,14 +35,13 @@
                 pattern: patternInput,
                 material: materialInput,
                 washInfo: washingInfoInput,
-                washable: washableInput,
+                washable: washableInput == true ? true : false,
             }),
         }).then(
             (response: HttpResponse) => {
                 console.log('got request');
                 console.log(response.statusCode);
                 if (response.statusCode === 201) {
-                    console.log('works');
                     // then go back
                     navigate({
                         page: Home

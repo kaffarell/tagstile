@@ -9,11 +9,13 @@
     let array: any[] = [];
 
     let uniqueId: string;
-    let washable: string;
     let owner: string;
+    let washable: string;
     let washInfo: string;
     let material: string;
     let mainColor: string;
+    let secondaryColor: string;
+    let pattern: string;
     let compatibilityMessage = 'Compare more than two tags...';
     let selectedWashingMachine: number;
 
@@ -36,11 +38,13 @@
             (response: HttpResponse) => {
                 if (response.statusCode === 200) {
                     uniqueId = response.content?.toJSON()["_id"];
-                    washable = response.content?.toJSON().washable;
-                    owner = response.content?.toJSON().owner;
-                    washInfo = response.content?.toJSON().washInfo;
-                    material = response.content?.toJSON().material;
-                    mainColor = response.content?.toJSON().mainColor;
+                    washable = response.content?.toJSON().washable ?? "";
+                    owner = response.content?.toJSON().owner ?? "";
+                    washInfo = response.content?.toJSON().washInfo ?? "";
+                    material = response.content?.toJSON().material ?? "";
+                    mainColor = response.content?.toJSON().mainColor ?? "";
+                    secondaryColor = response.content?.toJSON().secondaryColor ?? "";
+                    pattern = response.content?.toJSON().pattern ?? "";
                     let currentObject = {
                         uniqueId: uniqueId,
                         owner: owner,
@@ -136,6 +140,8 @@
         washInfo = "";
         material = "";
         mainColor = "";
+        secondaryColor = "";
+        pattern = "";
     }
 
     // check if we can add to storage
@@ -175,36 +181,60 @@
           <span text="{uniqueId}" style="font-weight: bold; font-size: 22;" />
         </formattedString>
       </label>
-      <label textWrap={true}>
-        <formattedString>
-          <span text="Washable: " />
-          <span text="{washable}" style="font-weight: bold; font-size: 22;" />
-        </formattedString>
-      </label>
+      {#if owner != ""}
       <label textWrap={true}>
         <formattedString>
           <span text="Owner: " />
           <span text="{owner}" style="font-weight: bold; font-size: 22;" />
         </formattedString>
       </label>
+      {/if}
+      <label textWrap={true}>
+        <formattedString>
+          <span text="Washable: " />
+          <span text="{washable}" style="font-weight: bold; font-size: 22;" />
+        </formattedString>
+      </label>
+      {#if washInfo != ""}
       <label textWrap={true}>
         <formattedString>
           <span text="Washing Info: " />
           <span text="{washInfo}" style="font-weight: bold; font-size: 22;" />
         </formattedString>
       </label>
+      {/if}
+      {#if material != ""}
       <label textWrap={true}>
         <formattedString>
           <span text="Material: " />
           <span text="{material}" style="font-weight: bold; font-size: 22;" />
         </formattedString>
       </label>
+      {/if}
+      {#if mainColor != ""}
       <label textWrap={true}>
         <formattedString>
           <span text="Main Color: " />
           <span text="{mainColor}" style="font-weight: bold" />
         </formattedString>
       </label>
+      {/if}
+      {#if secondaryColor != ""}
+      <label textWrap={true}>
+        <formattedString>
+          <span text="Secondary Color: " />
+          <span text="{secondaryColor}" style="font-weight: bold" />
+        </formattedString>
+      </label>
+      {/if}
+      {#if pattern != ""}
+      <label textWrap={true}>
+        <formattedString>
+          <span text="Pattern: " />
+          <span text="{pattern}" style="font-weight: bold" />
+        </formattedString>
+      </label>
+      {/if}
     </stackLayout>
 
     <button class="fas" on:tap={startWash}>Start washing</button>
@@ -213,7 +243,7 @@
             <span text="{compatibilityMessage + '\n'}" style="font-weight: bold; font-size: 22" />
         </formattedString>
     </label>
-    <textView editable="false" class="mainMessage" text="{array.map(e => e.uniqueId + ', ' + e.owner).join('\n')}" style="font-weight: bold; font-size: 18" />
+    <textView editable="false" class="mainMessage" text="{array.map(e => e.uniqueId + ', ' + e.owner).join('\n')}" style="font-weight: bold; font-size: 18; color: black;" />
     <flexBoxLayout>
         <button class="fas" on:tap={reset}>Reset</button>
         <button class="fas" on:tap={returnToHome}>Return</button>
@@ -258,8 +288,8 @@
         background-color: white;
         color: black;
         width: 90%;
-        height: 30%;
         box-shadow:0 0 40px rgba(0,0,0,0.2);
+        padding: 5%;
         border-radius: 9vw;
         vertical-align: center;
         margin-top: 3%;
