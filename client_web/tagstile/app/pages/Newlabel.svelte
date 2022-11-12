@@ -1,9 +1,10 @@
 <script lang="ts">
   import { Http, HttpResponse } from "@nativescript/core";
-  import { goBack } from "svelte-native";
+  import { navigate } from "svelte-native";
   import { Toasty } from "nativescript-toasty";
-  import { getUUID } from "@owen-it/nativescript-uuid";
   import { writeNfcTag } from "~/managers/nfcManager";
+  import Home from "./Home.svelte";
+
 
   let ownerInput: string;
   let locationInput: string;
@@ -16,10 +17,12 @@
 
   function createLabel() {
     // make rest cal with all the variables
-    let id: string = getUUID();
+    let id: string = Date.now().toString();
+    console.log(id);
 
     writeNfcTag(id).then(() => {
         console.log('Successfully written');
+        console.log('sending stuff')
         Http.request({
             url: "https://tagstile-app.herokuapp.com/api/v1/label/" + id,
             method: "POST",
@@ -38,17 +41,14 @@
             (response: HttpResponse) => {
                 console.log('got request');
                 console.log(response.statusCode);
-                console.log(response);
                 if (response.statusCode === 201) {
                     console.log('works');
-                    const toast = new Toasty({ text: "Success!" });
-                    toast.show();
                     // then go back
-                    goBack();
+                    navigate({
+                        page: Home
+                    });
                 } else {
                     console.log('failed');
-                    const toast = new Toasty({ text: "Failed!" });
-                    toast.show();
                 }
             },
             (e) => {
@@ -99,7 +99,7 @@
     height: 17%;
   }
   label {
-    font-size: 14;
+    font-size: 18;
     margin-left: 10%;
   }
   button {
