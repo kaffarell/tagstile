@@ -5,7 +5,6 @@ const router = express.Router();
 const Label = require('./models/label');
 
 router.get('/:owner', async(req,res)=> {
-    console.log('sono nella get'); 
     let owner= req.params.owner; 
     let labels = await Label.find({owner: owner}) 
     labels=labels.map((label)=>{return{
@@ -23,7 +22,7 @@ router.get('/:owner', async(req,res)=> {
     res.status(200).json(labels);  
 })
 
-router.get(':id', async (req, res) => {
+router.get('/id/:id', async (req, res) => {
     let idLabel = req.params.id; 
     let label = await Label.findOne({_id: idLabel}); 
     if(!label){
@@ -32,7 +31,7 @@ router.get(':id', async (req, res) => {
         return; 
     }
     res.status(200).json({
-        self: '/api/v1/label/'+idLabel,
+        self: '/api/v1/label/id/'+idLabel,
         _id: label._id,
         owner: label.owner, 
         location: label.location,
